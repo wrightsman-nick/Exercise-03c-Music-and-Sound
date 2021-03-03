@@ -45,25 +45,11 @@ func _physics_process(_delta):
 		pass
 
 
-	var bodies = get_colliding_bodies()
-	for body in bodies:
-		if body.name == "Walls":
-			if HUD.screen_shake_walls > 0:
-				camera.add_trauma(wall_trauma*HUD.screen_shake_walls)
-			play_sound(effect_wall)
-		if body.name == "Paddle":
-			if HUD.screen_shake_paddle > 0:
-				camera.add_trauma(paddle_trauma*HUD.screen_shake_paddle)
-			play_sound(effect_paddle)
-		if body.is_in_group("Brick"):
-			if HUD.screen_shake_blocks > 0:
-				camera.add_trauma(brick_trauma*HUD.screen_shake_blocks)
-			play_sound(effect_brick)
-			
-		if body.has_method("emit_particle"):
-			body.emit_particle(global_position)
-		if body.is_in_group("Brick"):
-			body.die()
+	if HUD.ball_trail:
+		var c = $Color.duplicate()
+		c.rect_global_position = global_position
+		c.color = c.color.darkened(0.4)
+		get_node("/root/Game/Trail_Container").add_child(c)
 
 func _integrate_forces(state):
 	if abs(state.linear_velocity.x) < min_speed:
